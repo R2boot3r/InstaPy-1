@@ -126,7 +126,7 @@ class InstaPy:
         bypass_security_challenge_using: str = "email",
         security_codes: int = 0000,
         want_check_browser: bool = True,
-        browser_executable_path: str = None,
+        browser_executable_path: str ="C:/Users/R2boot3r/AppData/Local/Mozilla Firefox/firefox.exe",
         geckodriver_log_level: str = "info",  # "info" by default
     ):
         print("InstaPy Version: {}".format(__version__))
