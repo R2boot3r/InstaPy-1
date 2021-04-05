@@ -21,6 +21,8 @@ from logging.handlers import RotatingFileHandler
 from contextlib import contextmanager
 from copy import deepcopy
 
+from .julien_utils import get_post_caption
+
 try:
     from pyvirtualdisplay import Display
 except ModuleNotFoundError:
@@ -1892,13 +1894,15 @@ class InstaPy:
         use_random_tags: bool = False,
         amount: int = 50,
         skip_top_posts: bool = True,
-        use_smart_hashtags: bool = False,
-        use_smart_location_hashtags: bool = False,
+        use_smart_hashtags: bool = False, #voir a quoi ca sert
+        use_smart_location_hashtags: bool = False, #voir a quoi ca sert
         interact: bool = False,
         randomize: bool = False,
         media: str = None,
     ):
         """Likes (default) 50 images per given tag"""
+
+        # Partout
         if self.aborting:
             return self
 
@@ -1951,7 +1955,10 @@ class InstaPy:
                 self.logger.info("Too few images, skipping this tag")
                 continue
 
+            # Going through each links
+
             for i, link in enumerate(links):
+                # Don't know what this is for
                 if self.jumps["consequent"]["likes"] >= self.jumps["limit"]["likes"]:
                     self.logger.warning(
                         "--> Like quotient reached its peak!\t~leaving "
@@ -1994,6 +2001,8 @@ class InstaPy:
                         else:
                             web_address_navigator(self.browser, link)
 
+                        get_post_caption(self.browser,link,self.logger)
+
                         # try to like
                         like_state, msg = like_image(
                             self.browser,
@@ -2014,7 +2023,7 @@ class InstaPy:
 
                             checked_img = True
                             temp_comments = []
-
+                            # What is this used for ?
                             commenting = (
                                 random.randint(0, 100) <= self.comment_percentage
                             )
@@ -2146,6 +2155,68 @@ class InstaPy:
         self.followed += followed
         self.inap_img += inap_img
         self.not_valid_users += not_valid_users
+
+        return self
+
+    def get_all_tags_captions(
+        self,
+        tags: list = None,
+        amount: int = 50,
+        skip_top_posts: bool = True,
+        randomize: bool = False,
+        media: str = None,
+    ):
+        """Likes (default) 50 images per given tag"""
+
+        # Partout
+
+        if self.aborting:
+            return self
+
+        # deletes white spaces in tags
+
+        tags = [tag.strip() for tag in tags]
+        tags = tags or []
+        self.quotient_breach = False
+
+        for index, tag in enumerate(tags):
+            if self.quotient_breach:
+                break
+
+            self.logger.info("Tag [{}/{}]".format(index + 1, len(tags)))
+            self.logger.info("Current tag: {}".format(tag.encode("utf-8")))
+
+            try:
+                links = get_links_for_tag(
+                    self.browser,
+                    tag,
+                    amount,
+                    skip_top_posts,
+                    randomize,
+                    media,
+                    self.logger,
+                )
+            except NoSuchElementException:
+                self.logger.info("Too few images, skipping this tag")
+                continue
+
+            # Going through each links
+
+            for i, link in enumerate(links):
+
+                self.logger.info("Like# [{}/{}]".format(i + 1, len(links)))
+                self.logger.info(link)
+
+                try:
+
+                    web_address_navigator(self.browser, link)
+
+                    get_post_caption(self.browser,link,self.logger)
+
+                except NoSuchElementException as err:
+                    self.logger.error("Invalid Page: {}".format(err))
+
+            self.logger.info("Tag: {}".format(tag.encode("utf-8")))
 
         return self
 

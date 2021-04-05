@@ -10,7 +10,7 @@ from instapy import set_workspace
 set_workspace(path=None)
 
 # get an InstaPy session!
-session = InstaPy(username="julien.chovetoneirb@gmail.com",
+session = InstaPy(username="jules.dubois45",
                 password="vache1s2")
 
 with smart_run(session):
@@ -18,4 +18,6 @@ with smart_run(session):
     session.set_dont_include(["friend1", "friend2", "friend3"])
 
     # activity
-    session.like_by_tags(["natgeo"], amount=10)
+    #session.like_by_tags(["natgeo"], amount=10)
+
+    session.get_all_tags_captions(["jeuconcours"], amount = 20)
