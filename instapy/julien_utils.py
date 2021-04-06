@@ -138,4 +138,5 @@ def get_post_caption(
     logger.info("Image from: {}".format(user_name.encode("utf-8")))
     logger.info("Link: {}".format(post_link.encode("utf-8")))
     logger.info("Description only: {}".format(image_text.encode("utf-8")))
+    print(image_text.encode("utf-8"))
     return image_text, True

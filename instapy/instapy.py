@@ -1,5 +1,6 @@
 """OS Modules environ method to get the setup vars from the Environment"""
 # import built-in & third-party modules
+# -*- coding: UTF-8 -*-
 import time
 import random
 import os

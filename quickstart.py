@@ -1,5 +1,5 @@
 """ Quickstart script for InstaPy usage """
-
+# -*- coding: UTF-8 -*-
 # imports
 from instapy import InstaPy
 from instapy import smart_run
