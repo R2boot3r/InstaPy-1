@@ -2002,7 +2002,7 @@ class InstaPy:
                         else:
                             web_address_navigator(self.browser, link)
 
-                        get_post_caption(self.browser,link,self.logger)
+
 
                         # try to like
                         like_state, msg = like_image(
@@ -2178,11 +2178,10 @@ class InstaPy:
 
         tags = [tag.strip() for tag in tags]
         tags = tags or []
-        self.quotient_breach = False
+        post_info_list = []
 
         for index, tag in enumerate(tags):
-            if self.quotient_breach:
-                break
+
 
             self.logger.info("Tag [{}/{}]".format(index + 1, len(tags)))
             self.logger.info("Current tag: {}".format(tag.encode("utf-8")))
@@ -2212,7 +2211,9 @@ class InstaPy:
 
                     web_address_navigator(self.browser, link)
 
-                    get_post_caption(self.browser,link,self.logger)
+                    post_data, _ = get_post_caption(self.browser,link,self.logger)
+
+                    post_info_list.append(post_data)
 
                 except NoSuchElementException as err:
                     self.logger.error("Invalid Page: {}".format(err))

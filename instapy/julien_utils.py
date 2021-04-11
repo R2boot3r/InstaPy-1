@@ -1,6 +1,7 @@
 import re
 
 from re import findall
+from instapy.julien.caption_data import PostData
 
 from selenium.common.exceptions import WebDriverException
 
@@ -52,10 +53,16 @@ def get_post_caption(
 
     # Gets the description of the post's link
     graphql = "graphql" in post_page
+    post_data = PostData()
 
     if graphql:
         media = post_page["graphql"]["shortcode_media"]
+        post_data.post_id = media["id"]
+        post_data.short_link = media["shortcode"]
+        post_data.creation_timestamp = media["taken_at_timestamp"]
+        post_data.owner_account = media["owner"]["username"]
         is_video = media["is_video"]
+
         user_name = media["owner"]["username"]
         image_text = media["edge_media_to_caption"]["edges"]
         image_text = image_text[0]["node"]["text"] if image_text else None
@@ -134,9 +141,11 @@ def get_post_caption(
 
     if image_text is None:
         image_text = "No description"
+    post_data.caption = image_text
+    logger.info("Post id : {}".format(post_data.post_id))
+    logger.info("Link: {}".format(post_data.short_link.encode("utf-8")))
+    logger.info("Creation timestamp: {}".format(post_data.creation_timestamp))
+    logger.info("Owner Account: {}".format(user_name.encode("utf-8")))
+    logger.info("Description : {}".format(post_data.caption.encode("utf-8")))
 
-    logger.info("Image from: {}".format(user_name.encode("utf-8")))
-    logger.info("Link: {}".format(post_link.encode("utf-8")))
-    logger.info("Description only: {}".format(image_text.encode("utf-8")))
-    print(image_text.encode("utf-8"))
-    return image_text, True
+    return post_data, True

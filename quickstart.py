@@ -21,3 +21,4 @@ with smart_run(session):
     #session.like_by_tags(["natgeo"], amount=10)
 
     session.get_all_tags_captions(["jeuconcours"], amount = 20)
+    #session.like_by_tags(["jeuconcours"], amount = 20)
